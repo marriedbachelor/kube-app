@@ -15,30 +15,30 @@ spec:
       labels:
        app: vprodb
     spec:
-       containers:
-         - name: vprodb
-           image: marriedbachelor/vprofiledb:latest
-           volumeMounts: 
-             - name: vpro-db-data
-               mountPath: /var/lib/mysql
+      containers:
+       - name: vprodb
+         image: marriedbachelor/vprofiledb:latest
+         volumeMounts: 
+            - name: vpro-db-data
+              mountPath: /var/lib/mysql
               
-           ports:
-             - name: vprodb-port
-               containerPort: 3306
-           env:
-             - name: MYSQL_ROOT_PASSWORD
-               valueFrom:
+         ports:
+            - name: vprodb-port
+              containerPort: 3306
+         env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
                  secretKeyRef:
                  name: app-secret
                  key: db-pass
-    nodeSelector:
-      zone: us-east-1a
-    volumes:
+      nodeSelector:
+        zone: us-east-1a
+      volumes:
         - name: vpro-db-data
           awsElasticBlockStore:
             volumeID: vol-0a29e5e4f697666d9
             fsType: ext4
-    initContainers:
+      initContainers:
         - name: busybox
           image: busybox:latest
           args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
